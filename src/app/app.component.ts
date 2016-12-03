@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx'; 
+import { Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
@@ -104,8 +106,23 @@ export class AppComponent {
 
   }
 
-  //Functional Operator: Map
+  //Subjects
   example6() {
+  	let foo = new Subject();
+  	let bar = foo.subscribe(
+  		x=> console.log('next ' + x.toString()),
+  		err => console.log('error ' + err),
+  		()=> console.log('completed')
+  		);
+
+  	foo.next(1);
+  	foo.next(2);
+  	foo.next(3);
+  	foo.complete();
+  }
+
+  //Functional Operator: Map
+  example7() {
   	let foo = Observable.of(1,2,3,4,5,6,7,8,9,10)
 	  	.map(x=> x*2);
   	let bar = foo.subscribe(
@@ -115,7 +132,7 @@ export class AppComponent {
   }
 
   //Functional Operator: Reduce
-  example7() {
+  example8() {
   	let foo = Observable.of(1,2,3,4)
 	  	.reduce((acc, x) => {
         	return acc * x;
@@ -125,10 +142,34 @@ export class AppComponent {
   		(err) => console.log(err),
   		()=> console.log('Success'));
   }
+  
+  //Filter
+  example9() {
+  	let foo = Observable.of(1,2,3,4).filter((x)=> x % 2===0);
+  	let bar = foo.subscribe(
+  		(res) => console.log(res),
+  		(err) => console.log(err),
+  		()=> console.log('Success'));
+  	}
 
+  //Scan operator
+  example10() {
+  	let foo = Observable.interval(500).take(5);
+  	let scanFoo = foo.scan((state, value) => state + value, 0);
+    let bar = scanFoo.subscribe(total => console.log(total));
+  }
+
+  //Share
+  example11() {
+  	let foo = Observable.interval(500).take(5)
+  		.do(i => console.log('foo value', + i))
+  		.share();	
+  	foo.subscribe(value => console.log("observer 1 received " + value));
+	foo.subscribe(value => console.log("observer 2 received " + value));
+  }
   ngOnInit() {
   	//Run any example by changing the number in the function name
-  	this.example5();
+  	this.example1();
   }
 
 }
