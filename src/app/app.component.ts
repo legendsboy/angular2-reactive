@@ -89,11 +89,46 @@ export class AppComponent {
   	bar.unsubscribe();
   	console.log(bar);
   }
+  
+  //Hot vs Cold
+  example5() {
+  	let foo = Observable.of(1,2,3,4,5,6,7,8,9);
+  	
+  	setTimeout(() => {
+  		foo.subscribe(value => console.log(value));
+	}, 0);
 
+	setTimeout(() => {
+	  foo.subscribe(value => console.log(`>>>> ${value}`));
+	}, 2500);
+
+  }
+
+  //Functional Operator: Map
+  example6() {
+  	let foo = Observable.of(1,2,3,4,5,6,7,8,9,10)
+	  	.map(x=> x*2);
+  	let bar = foo.subscribe(
+  		(res) => console.log(res),
+  		(err) => console.log(err),
+  		()=> console.log('Success'));
+  }
+
+  //Functional Operator: Reduce
+  example7() {
+  	let foo = Observable.of(1,2,3,4)
+	  	.reduce((acc, x) => {
+        	return acc * x;
+    	},1);
+  	let bar = foo.subscribe(
+  		(res) => console.log(res),
+  		(err) => console.log(err),
+  		()=> console.log('Success'));
+  }
 
   ngOnInit() {
   	//Run any example by changing the number in the function name
-  	this.example4();
+  	this.example5();
   }
 
 }
